@@ -1,0 +1,22 @@
+{
+  "name": "prueba",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Prueba 2",
+  "license": "ISC",
+  "author": "Kevin",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "seed:import":"node data/seed.js --import",
+    "seed:destroy":"node data/seed.js --destroy"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  },
+  "dependencies": {
+    "colors": "^1.4.0",
+    "express": "^4.21.2"
+  }
+}
