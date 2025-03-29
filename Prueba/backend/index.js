@@ -1,27 +1,52 @@
-//importaciones
+// Importaciones
 import express from 'express'
 import dotenv from 'dotenv'
 import colors from 'colors'
-import {db} from './confing/db.js'
+import cors from 'cors'
+import { db } from './confing/db.js'
 import servicesRoutes from './routes/serviceRoutes.js'
-//variables de entorno
+
+// Variables de entorno
 dotenv.config()
 
-//configuracion de la app
+// Configuración de la app
 const app = express()
 
-//leer datos via body
+// Configuración del CORS
+const whitelist = [process.env.FRONTEND_URL]
+
+if (process.argv[2] === '--postman') {
+  whitelist.push(undefined)
+}
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (!origin || whitelist.includes(origin)) {
+      callback(null, true)
+    } else {
+      callback(new Error('Error de CORS - Origen no permitido'))
+    }
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+}
+
+app.use(cors(corsOptions))
+
+// Middleware para leer datos JSON en body
 app.use(express.json())
 
-//definicion de la ruta 
-app.use('/api/services',servicesRoutes)
+// Rutas
+app.use('/api/services', servicesRoutes)
 
-//conectar base
+// Conectar base de datos
 db()
-//definicion del puerto
+
+// Puerto
 const PORT = process.env.PORT || 4001
 
-//ejecutar del app
-app.listen(PORT,()=>{
-    console.log(colors.blue('El servidor puerto ', PORT))
+// Ejecutar app
+app.listen(PORT, () => {
+  console.log(colors.blue('El servidor puerto ', PORT))
 })
